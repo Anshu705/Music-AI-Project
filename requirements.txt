@@ -1,6 +1,5 @@
 streamlit
 librosa
-tensorflow
-keras
+tensorflow-cpu
 pandas
 scikit-learn
