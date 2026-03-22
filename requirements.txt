@@ -1,7 +1,6 @@
 streamlit
 librosa
-numpy
-keras
 tensorflow
+keras
 pandas
 scikit-learn
