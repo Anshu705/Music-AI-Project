@@ -39,10 +39,11 @@ def load_ai():
     model = keras.models.load_model(model_path)
     data = pd.read_csv(csv_path)
     
-    # Preprocessing
+    # Preprocessing: Remove brackets from BPM and convert to float
     data['BPM'] = data['BPM'].apply(lambda x: float(str(x).replace('[', '').replace(']', '')))
+    
+    # Selecting the 7 columns for the Scaler
     X_raw = data[['BPM', 'MFCC', 'Centroid', 'Rolloff', 'Chroma', 'ZCR', 'RMS']].values
-    scaler = StandardScaler().fit(X_raw)
     encoder = LabelEncoder().fit(data['Label'])
     
     return model, scaler, encoder
