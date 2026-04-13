@@ -174,14 +174,14 @@ elif menu == "🎹 Artist Hub":
 # ==========================================
 elif menu == "💎 Subscriptions":
     st.markdown("<h1 style='text-align: center;'>Upgrade Your Frequency</h1>", unsafe_allow_html=True)
-    st.write("<p style='text-align:center;'>All premium tiers now feature <b>45-Day Validity</b>.</p>", unsafe_allow_html=True)
+    st.write("<p style='text-align:center;'>All premium tiers now feature <b>14-Day Validity</b>.</p>", unsafe_allow_html=True)
     
     p1, p2, p3, p4 = st.columns(4)
     plans = [
         {"name": "LISTENER", "price": 7, "color": "#00f2ea", "feat": "AI Mood Prediction"},
         {"name": "UI PRO", "price": 14, "color": "#ff00ff", "feat": "Custom Dashboards"},
         {"name": "ARTIST", "price": 21, "color": "#00ff00", "feat": "45-Min Generation"},
-        {"name": "ALL-IN", "price": 25, "color": "gold", "feat": "Full Studio + VIP Support"}
+        {"name": "ALL-IN", "price": 45, "color": "gold", "feat": "Full Studio + VIP Support"}
     ]
 
     for idx, col in enumerate([p1, p2, p3, p4]):
