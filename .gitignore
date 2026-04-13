@@ -1,0 +1,5 @@
+archive/
+archive.zip
+*.png
+music_env/
+__pycache__/
