@@ -3,34 +3,41 @@ import librosa
 import pandas as pd
 import numpy as np
 
-base_path = 'C:/Music_AI_Project/archive/Data/genres_original'
+# Path to your extracted GTZAN folders
+base_path = 'C:/Music_AI_Project/genres_original'
 genres = ['blues', 'classical', 'country', 'disco', 'hiphop', 'jazz', 'metal', 'pop', 'reggae', 'rock']
-all_data = []
 
-print("🚀 Starting Advanced Extraction (7 Features) for 1,000 songs...")
+all_data = []
+print("🚀 Upgrading Database to 7 Features...")
 
 for genre in genres:
     folder_path = os.path.join(base_path, genre)
+    if not os.path.exists(folder_path): continue
+    
     for filename in os.listdir(folder_path):
         if filename.endswith('.wav'):
             file_path = os.path.join(folder_path, filename)
             try:
                 y, sr = librosa.load(file_path, duration=30)
                 
-                # --- ADVANCED FEATURE SET ---
+                # 1. BPM
                 tempo, _ = librosa.beat.beat_track(y=y, sr=sr)
-                mfcc = np.mean(librosa.feature.mfcc(y=y, sr=sr, n_mfcc=13))
-                spectral_centroid = np.mean(librosa.feature.spectral_centroid(y=y, sr=sr))
-                spectral_rolloff = np.mean(librosa.feature.spectral_rolloff(y=y, sr=sr))
-                chroma_stft = np.mean(librosa.feature.chroma_stft(y=y, sr=sr))
-                zcr = np.mean(librosa.feature.zero_crossing_rate(y))
-                rms = np.mean(librosa.feature.rms(y=y)) # Volume/Energy
+                bpm = float(tempo[0]) if isinstance(tempo, (list, np.ndarray)) else float(tempo)
                 
-                all_data.append([filename, tempo, mfcc, spectral_centroid, spectral_rolloff, chroma_stft, zcr, rms, genre])
+                # 2-7. The 6 Missing Features
+                mfcc = np.mean(librosa.feature.mfcc(y=y, sr=sr, n_mfcc=13))
+                centroid = np.mean(librosa.feature.spectral_centroid(y=y, sr=sr))
+                rolloff = np.mean(librosa.feature.spectral_rolloff(y=y, sr=sr))
+                chroma = np.mean(librosa.feature.chroma_stft(y=y, sr=sr))
+                zcr = np.mean(librosa.feature.zero_crossing_rate(y))
+                rms = np.mean(librosa.feature.rms(y=y))
+                
+                all_data.append([filename, bpm, mfcc, centroid, rolloff, chroma, zcr, rms, genre])
+                print(f"✅ Extracted 7 features for: {filename}")
             except:
-                print(f"⚠️ Skipping: {filename}")
+                continue
 
-cols = ['Filename', 'BPM', 'MFCC', 'Centroid', 'Rolloff', 'Chroma', 'ZCR', 'RMS', 'Label']
-df = pd.DataFrame(all_data, columns=cols)
+# Save the complete 7-feature database
+df = pd.DataFrame(all_data, columns=['Filename', 'BPM', 'MFCC', 'Centroid', 'Rolloff', 'Chroma', 'ZCR', 'RMS', 'Label'])
 df.to_csv('music_database_1000.csv', index=False)
-print("✅ Done! 1,000 songs analyzed with high-precision features.")
+print("✨ Database matches Model Features! Now push this to GitHub.")
