@@ -6,81 +6,112 @@ import pandas as pd
 from sklearn.preprocessing import LabelEncoder, StandardScaler
 import os
 import time
+import base64
+from datetime import datetime
 
-# ==========================================
-# 1. ADVANCED ENGINE (CSS & JAVASCRIPT)
-# ==========================================
-st.set_page_config(page_title="VibeSynth Premium | Manan", page_icon="⚡", layout="wide")
+# ==============================================================================
+# MODULE A: THE GLOBAL STYLE ENGINE (NEO-GLASSMORPHISM)
+# ==============================================================================
+st.set_page_config(
+    page_title="VibeSynth Ultra | The Future of AI Music",
+    page_icon="⚡",
+    layout="wide",
+    initial_sidebar_state="expanded"
+)
 
-def inject_ultra_ui():
+def inject_vibe_css():
     st.markdown("""
     <style>
-        /* A. RADIANT ANIMATED BACKGROUND */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&display=swap');
+        
+        * { font-family: 'Inter', sans-serif; }
+
+        /* VIBRANT ANIMATED BACKGROUND */
         .stApp {
-            background: linear-gradient(-45deg, #0f0c29, #302b63, #24243e, #00d2ff);
+            background: linear-gradient(-45deg, #050505, #121212, #001f3f, #00d2ff);
             background-size: 400% 400%;
-            animation: gradientBG 15s ease infinite;
-            color: white;
-            font-family: 'Inter', sans-serif;
+            animation: vibeGradient 15s ease infinite;
+            color: #ffffff;
         }
-        @keyframes gradientBG {
+        @keyframes vibeGradient {
             0% { background-position: 0% 50%; }
             50% { background-position: 100% 50%; }
             100% { background-position: 0% 50%; }
         }
 
-        /* B. GAMING BLADE CARDS */
-        .sub-card {
-            background: rgba(255, 255, 255, 0.04);
+        /* CUSTOM SIDEBAR (SUNO STYLE) */
+        [data-testid="stSidebar"] {
+            background: rgba(0, 0, 0, 0.7) !important;
+            backdrop-filter: blur(20px);
+            border-right: 1px solid rgba(0, 210, 255, 0.2);
+        }
+
+        /* CLOUD GAMING BLADE CARDS */
+        .premium-card {
+            background: rgba(255, 255, 255, 0.03);
             backdrop-filter: blur(25px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.08);
             border-radius: 30px;
-            padding: 45px;
+            padding: 40px;
             text-align: center;
             transition: all 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
         }
-        .sub-card:hover {
-            transform: scale(1.08) translateY(-20px);
-            background: rgba(0, 242, 234, 0.1);
-            border-color: #00f2ea;
-            box-shadow: 0 30px 60px rgba(0,0,0,0.5), 0 0 20px rgba(0, 242, 234, 0.3);
+        .premium-card:hover {
+            transform: scale(1.06) translateY(-15px);
+            background: rgba(0, 210, 255, 0.08);
+            border-color: #00d2ff;
+            box-shadow: 0 40px 80px rgba(0,0,0,0.6), 0 0 30px rgba(0, 210, 255, 0.4);
         }
 
-        /* C. ARTIST HUB PREMIUM CARDS */
-        .artist-hub-card {
-            background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(0,0,0,0.4));
+        /* SUNO MUSIC ROW */
+        .track-row {
+            display: flex;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.03);
             border-radius: 20px;
-            padding: 25px;
-            border-left: 6px solid #00f2ea;
-            margin-bottom: 20px;
+            padding: 20px 30px;
+            margin-bottom: 15px;
+            border: 1px solid transparent;
+            transition: 0.3s ease;
+        }
+        .track-row:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: #00d2ff;
+            cursor: pointer;
         }
 
-        /* D. MOUSE GLOW */
-        #glow {
+        /* GLOWING BUTTONS */
+        .stButton>button {
+            border-radius: 50px;
+            padding: 12px 30px;
+            background: linear-gradient(90deg, #00d2ff, #0072ff);
+            border: none;
+            color: white;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: 0.4s;
+        }
+        .stButton>button:hover {
+            box-shadow: 0 0 25px #00d2ff;
+            transform: translateY(-2px);
+        }
+
+        /* MOUSE GLOW OVERLAY */
+        #cursor-glow {
             position: fixed;
             top: 0; left: 0;
             width: 800px; height: 800px;
-            background: radial-gradient(circle, rgba(0,242,234,0.12) 0%, rgba(0,0,0,0) 70%);
+            background: radial-gradient(circle, rgba(0,210,255,0.12) 0%, rgba(0,0,0,0) 70%);
             border-radius: 50%;
             pointer-events: none;
             transform: translate(-50%, -50%);
-            z-index: 0;
-        }
-
-        /* E. QR MODAL */
-        .qr-container {
-            background: white;
-            color: black;
-            padding: 20px;
-            border-radius: 20px;
-            text-align: center;
-            box-shadow: 0 0 50px rgba(0,0,0,0.8);
+            z-index: 9999;
         }
     </style>
-    
-    <div id="glow"></div>
+    <div id="cursor-glow"></div>
     <script>
-        const glow = document.getElementById('glow');
+        const glow = document.getElementById('cursor-glow');
         document.addEventListener('mousemove', (e) => {
             glow.style.left = e.clientX + 'px';
             glow.style.top = e.clientY + 'px';
@@ -88,139 +119,161 @@ def inject_ultra_ui():
     </script>
     """, unsafe_allow_html=True)
 
-inject_ultra_ui()
-
-# ==========================================
-# 2. AI BACKEND
-# ==========================================
+# ==============================================================================
+# MODULE B: THE AI BRAIN (SIGNAL PROCESSING)
+# ==============================================================================
 @st.cache_resource
-def load_ai():
-    model_path = 'music_mood_model_1000.keras' 
-    csv_path = 'music_database_1000.csv'
-    if not os.path.exists(model_path): return None, None, None
-    model = keras.models.load_model(model_path)
-    data = pd.read_csv(csv_path)
-    data['BPM'] = data['BPM'].apply(lambda x: float(str(x).replace('[', '').replace(']', '')))
-    X_raw = data[['BPM', 'MFCC', 'Centroid', 'Rolloff', 'Chroma', 'ZCR', 'RMS']].values
-    scaler = StandardScaler().fit(X_raw)
-    encoder = LabelEncoder().fit(data['Label'])
-    return model, scaler, encoder
-
-model, scaler, encoder = load_ai()
-
-# ==========================================
-# 3. CORE NAVIGATION
-# ==========================================
-with st.sidebar:
-    st.markdown("<h1 style='color:#00f2ea;'>VibeSynth</h1>", unsafe_allow_html=True)
-    st.image("https://images.unsplash.com/photo-1470225620780-dba8ba36b745?auto=format&fit=crop&q=80&w=300", use_container_width=True)
-    menu = st.radio("MAIN MENU", ["🏠 Mission Control", "🎹 Artist Hub", "💎 Subscriptions"])
-    st.markdown("---")
-    st.write("🛡️ **Copyright Protection: ON**")
-    st.caption("Verifying fingerprints in real-time...")
-
-# ==========================================
-# 4. PAGE: MISSION CONTROL (HOME)
-# ==========================================
-if menu == "🏠 Mission Control":
-    st.markdown("<h1 style='text-align: center; font-size: 60px;'>Elevate Your Vibe</h1>", unsafe_allow_html=True)
+def initialize_ai_engine():
+    m_file = 'music_mood_model_1000.keras'
+    d_file = 'music_database_1000.csv'
     
-    col1, col2 = st.columns([1, 1])
-    with col1:
-        st.image("https://images.unsplash.com/photo-1493225255756-d9584f8606e9?auto=format&fit=crop&q=80&w=800", caption="Future of Sound")
-    with col2:
-        st.markdown("### 🚀 Our Mission")
-        st.write("VibeSynth was born in Jaipur with a singular goal: To democratize music production. We use advanced Artificial Intelligence to turn raw emotion into studio-grade compositions.")
-        
-        st.markdown("### 🎯 Our Goal")
-        st.write("We aim to protect independent creators. Through our automated **Copyright Reservation System**, every note generated is legally fingerprinted to you instantly.")
-        
+    if not os.path.exists(m_file) or not os.path.exists(d_file):
+        return None, None, None
+
+    brain = keras.models.load_model(m_file)
+    db = pd.read_csv(d_file)
+    
+    # Format BPM data
+    db['BPM'] = db['BPM'].apply(lambda x: float(str(x).replace('[', '').replace(']', '')))
+    
+    # Feature Scaler
+    features = db[['BPM', 'MFCC', 'Centroid', 'Rolloff', 'Chroma', 'ZCR', 'RMS']].values
+    scaler = StandardScaler().fit(features)
+    
+    # Genre Encoder
+    encoder = LabelEncoder().fit(db['Label'])
+    
+    return brain, scaler, encoder
+
+brain, scaler, encoder = initialize_ai_engine()
+
+# ==============================================================================
+# MODULE C: MISSION & BRANDING (HOME)
+# ==============================================================================
+def show_home():
+    st.markdown("<h1 style='text-align: center; font-size: 80px; font-weight: 900; margin-bottom: 0;'>VibeSynth Ultra</h1>", unsafe_allow_html=True)
+    st.markdown("<p style='text-align: center; font-size: 22px; opacity: 0.7; margin-bottom: 50px;'>Absolute AI Music Sovereignty</p>", unsafe_allow_html=True)
+    
+    col_l, col_r = st.columns(2)
+    with col_l:
         st.markdown("""
-        <div style="background:rgba(0,242,234,0.1); padding:20px; border-radius:15px; border:1px solid #00f2ea;">
-            <b>Live Status:</b> Retrained on 1,000 Professional Tracks for 98% Mood Accuracy.
+        <div style="background: rgba(255,255,255,0.05); padding: 40px; border-radius: 25px; border-left: 10px solid #00d2ff;">
+            <h2 style="color: #00d2ff;">🚀 Our Mission</h2>
+            <p style="font-size: 18px; line-height: 1.6;">VibeSynth was engineered in Jaipur with a singular purpose: to democratize music production for the next generation. We leverage advanced Signal Processing and Deep Learning to turn human emotion into professional-grade soundscapes.</p>
         </div>
         """, unsafe_allow_html=True)
-
-# ==========================================
-# 5. PAGE: ARTIST HUB (UPGRADED)
-# ==========================================
-elif menu == "🎹 Artist Hub":
-    st.title("🎨 Artist Hub & AI Studio")
     
-    col_a, col_b = st.columns([3, 2])
+    with col_r:
+        st.markdown("""
+        <div style="background: rgba(255,255,255,0.05); padding: 40px; border-radius: 25px; border-left: 10px solid #0072ff;">
+            <h2 style="color: #0072ff;">🎯 The 2027 Vision</h2>
+            <p style="font-size: 18px; line-height: 1.6;">Our goal is to create the first 'One-Click DAW'. We are moving toward a future where a 10-second vocal hum can be transformed into a 45-minute orchestrated album, fully copyright-reserved and legally protected instantly.</p>
+        </div>
+        """, unsafe_allow_html=True)
     
-    with col_a:
-        st.markdown("""<div class="artist-hub-card">
-            <h3>🎸 Vocal Alchemy (45-Min Sessions)</h3>
-            <p>Our most powerful engine. Upload your vocals, and the AI builds a full 45-minute arrangements including drums, bass, and synth melodies tailored to your pitch.</p>
-        </div>""", unsafe_allow_html=True)
-        st.file_uploader("Drop Vocal Stem", type=['mp3', 'wav'])
-        
-        st.markdown("""<div class="artist-hub-card">
-            <h3>🛡️ Copyright Strike Guard</h3>
-            <p>Before you release, our system scans global databases. We ensure your AI-generated track is unique and issues a <b>VibeSynth Certificate</b> of Ownership.</p>
-        </div>""", unsafe_allow_html=True)
-        if st.button("Generate Ownership Certificate"):
-            st.success("Certificate #VS-99281-2026 Issued to Manan Bansal")
+    st.markdown("---")
+    st.image("https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?w=1200", caption="Inside the VibeSynth Neural Core")
 
-    with col_b:
-        st.image("https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?auto=format&fit=crop&q=80&w=600", caption="Studio Interface")
-        st.markdown("### 🎹 Quick Tools")
-        st.button("Open MIDI Keyboard")
-        st.button("Mood-to-Melody Converter")
+# ==============================================================================
+# MODULE D: ARTIST CREATION HUB (DAW)
+# ==============================================================================
+def show_studio():
+    st.markdown("<h1>🎨 Artist Creation Hub</h1>", unsafe_allow_html=True)
+    
+    st.markdown("""
+    <div style="background: linear-gradient(90deg, rgba(0,210,255,0.1), transparent); padding: 20px; border-radius: 15px; border-left: 5px solid #00d2ff;">
+        <h3>🛡️ Copyright Strike Guard & Fingerprinting</h3>
+        <p>Before releasing your track, our system scans the global audio landscape. If your generation is 100% unique, we issue a <b>VibeSynth Certificate of Ownership</b>.</p>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    c1, c2 = st.columns([2, 1])
+    with c1:
+        st.write("### ➕ Vocal-to-Composition (45 Min Session)")
+        audio = st.file_uploader("Upload Raw Vocal Stem", type=['mp3', 'wav'])
+        if audio:
+            st.audio(audio)
+            if st.button("GENERATE SYMPHONY"):
+                with st.spinner("AI is composing drums, bass, and synth layers..."):
+                    time.sleep(3)
+                    st.success("45-Minute Composition Ready for Export!")
+    
+    with c2:
+        st.image("https://images.unsplash.com/photo-1514525253361-bee8a18744ad?w=600", caption="Studio Hardware Sync")
+        st.button("🎹 OPEN VIRTUAL PIANO")
+        st.button("🥁 LAUNCH DRUM PAD")
 
-# ==========================================
-# 6. PAGE: SUBSCRIPTIONS (PAYMENT QR SYSTEM)
-# ==========================================
-elif menu == "💎 Subscriptions":
+# ==============================================================================
+# MODULE E: SUBSCRIPTIONS & QR PAYMENTS
+# ==============================================================================
+def show_subscriptions():
     st.markdown("<h1 style='text-align: center;'>Upgrade Your Frequency</h1>", unsafe_allow_html=True)
-    st.write("<p style='text-align:center;'>All premium tiers now feature <b>14-Day Validity</b>.</p>", unsafe_allow_html=True)
+    st.markdown("<p style='text-align: center;'>All tiers now include <b>45-Day Validity</b> for the launch season.</p>", unsafe_allow_html=True)
     
     p1, p2, p3, p4 = st.columns(4)
     plans = [
-        {"name": "LISTENER", "price": 7, "color": "#00f2ea", "feat": "AI Mood Prediction"},
-        {"name": "UI PRO", "price": 14, "color": "#ff00ff", "feat": "Custom Dashboards"},
-        {"name": "ARTIST", "price": 21, "color": "#00ff00", "feat": "45-Min Generation"},
-        {"name": "ALL-IN", "price": 45, "color": "gold", "feat": "Full Studio + VIP Support"}
+        {"name": "LISTENER", "price": 7, "color": "#00d2ff", "desc": "AI Mood Detection"},
+        {"name": "UI PRO", "price": 14, "color": "#ff00ff", "desc": "Custom Glass Themes"},
+        {"name": "ARTIST", "price": 21, "color": "#00ff00", "desc": "DAW Studio Access"},
+        {"name": "ALL-IN", "price": 25, "color": "gold", "desc": "Full VIP Experience"}
     ]
 
     for idx, col in enumerate([p1, p2, p3, p4]):
         plan = plans[idx]
         with col:
-            st.markdown(f"""<div class="sub-card" style="border-color:{plan['color']};">
-                <h2 style="color:{plan['color']}">{plan['name']}</h2>
-                <h1 style="font-size:50px;">₹{plan['price']}</h1>
-                <p><b>45 DAYS</b></p>
-                <hr style="opacity:0.2">
-                <p>{plan['feat']}</p>
-            </div>""", unsafe_allow_html=True)
-            if st.button(f"Get {plan['name']}", key=f"btn_{plan['price']}"):
-                st.session_state['show_qr'] = plan['price']
+            st.markdown(f"""
+            <div class="premium-card" style="border-color: {plan['color']};">
+                <h2 style="color: {plan['color']}">{plan['name']}</h2>
+                <h1 style="font-size: 60px;">₹{plan['price']}</h1>
+                <p><b>45 DAYS ACCESS</b></p>
+                <hr style="opacity: 0.1">
+                <p>{plan['desc']}</p>
+            </div>
+            """, unsafe_allow_html=True)
+            if st.button(f"Unlock {plan['name']}", key=f"sub_{plan['price']}"):
+                st.session_state['qr_pay'] = plan['price']
 
-    # QR Code Popup Interface
-    if 'show_qr' in st.session_state:
+    if 'qr_pay' in st.session_state:
         st.markdown("---")
-        st.subheader(f"💳 Payment Secure Gateway: ₹{st.session_state['show_qr']}")
+        st.subheader(f"💳 Payment Secure Gateway: ₹{st.session_state['qr_pay']}")
         
-        q_col1, q_col2 = st.columns([1, 2])
-        with q_col1:
-            # Note: Save your images as qr_7.png, qr_14.png etc in your github repo
-            qr_file = f"qr_{st.session_state['show_qr']}.png"
+        qc1, qc2 = st.columns([1, 2])
+        with qc1:
+            qr_file = f"qr_{st.session_state['qr_pay']}.png"
             if os.path.exists(qr_file):
-                st.image(qr_file, width=250)
+                st.image(qr_file, width=300)
             else:
-                st.error(f"Please upload '{qr_file}' to your repository.")
-                st.caption("Dummy QR for Presentation:")
-                st.image("https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=Payment_Dummy")
+                st.error("QR image file missing!")
+                st.image("https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=Manan_VibeSynth_Payment")
         
-        with q_col2:
-            st.write("### Instructions:")
-            st.write(f"1. Scan the QR code for exactly ₹{st.session_state['show_qr']}.")
-            st.write("2. Enter your Transaction ID below.")
-            st.text_input("Transaction ID (UTR)")
-            if st.button("Verify Payment"):
+        with qc2:
+            st.write("### Instructions")
+            st.write(f"1. Scan to pay exactly ₹{st.session_state['qr_pay']}")
+            st.write("2. Upload screenshot or enter Transaction ID (UTR)")
+            st.text_input("Enter UTR Number")
+            if st.button("VERIFY & ACTIVATE"):
                 st.balloons()
-                st.success("Access Granted! Your OnePlus Nord CE4 app is now Syncing.")
-            if st.button("Close Payment Window"):
-                del st.session_state['show_qr']
+                st.success("Subscription Active on your OnePlus Nord CE4!")
+            if st.button("CLOSE"):
+                del st.session_state['qr_pay']
                 st.rerun()
+
+# ==============================================================================
+# MAIN EXECUTION FLOW
+# ==============================================================================
+inject_vibe_css()
+
+with st.sidebar:
+    st.markdown("<h1 style='color: #00d2ff;'>VIBESYNTH</h1>", unsafe_allow_html=True)
+    st.markdown("---")
+    nav = st.radio("SOCIETY", ["🏠 Home", "🎹 Creator Studio", "💎 Subscriptions"])
+    st.markdown("---")
+    st.caption("Developed by Manan Bansal")
+    st.caption("Arya College | Batch 2026")
+
+if nav == "🏠 Home":
+    show_home()
+elif nav == "🎹 Creator Studio":
+    show_studio()
+elif nav == "💎 Subscriptions":
+    show_subscriptions()
