@@ -3,12 +3,26 @@ import librosa
 import pandas as pd
 import numpy as np
 
-# Path to your extracted GTZAN folders on Predator Helios
-base_path = 'C:/Music_AI_Project/genres_original'
+# Path to your extracted GTZAN folders
+base_path = './archive/Data/genres_original'
 genres = ['blues', 'classical', 'country', 'disco', 'hiphop', 'jazz', 'metal', 'pop', 'reggae', 'rock']
 
+# The essential mapping to convert genres into your 7 mood classes
+mood_mapping = {
+    'pop': 'Happy',
+    'disco': 'Happy',
+    'blues': 'Sad',
+    'classical': 'Sad',
+    'hiphop': 'Energetic',
+    'metal': 'Aggressive',
+    'rock': 'Aggressive',
+    'reggae': 'Relaxed',
+    'country': 'Relaxed',
+    'jazz': 'Calm'
+}
+
 all_data = []
-print("🚀 Upgrading Database to 7 Features...")
+print("🚀 Upgrading Database to 7 Features and Mapping Moods...")
 
 for genre in genres:
     folder_path = os.path.join(base_path, genre)
@@ -16,10 +30,15 @@ for genre in genres:
         print(f"⚠️ Folder not found: {genre}")
         continue
     
+    # Get the correct mood label for this folder
+    mood_label = mood_mapping.get(genre, 'Unknown')
+    print(f"Processing {genre}... (Mapping to: {mood_label})")
+    
     for filename in os.listdir(folder_path):
         if filename.endswith('.wav'):
             file_path = os.path.join(folder_path, filename)
             try:
+                # Load the audio file
                 y, sr = librosa.load(file_path, duration=30)
                 
                 # Extracting the 7 features required by the new app.py
@@ -33,11 +52,12 @@ for genre in genres:
                 zcr = np.mean(librosa.feature.zero_crossing_rate(y))
                 rms = np.mean(librosa.feature.rms(y=y))
                 
-                all_data.append([filename, bpm, mfcc, centroid, rolloff, chroma, zcr, rms, genre])
+                # IMPORTANT: Append the mood_label, NOT the genre!
+                all_data.append([filename, bpm, mfcc, centroid, rolloff, chroma, zcr, rms, mood_label])
             except Exception as e:
                 print(f"❌ Error processing {filename}: {e}")
 
 # Save the final version
 df = pd.DataFrame(all_data, columns=['Filename', 'BPM', 'MFCC', 'Centroid', 'Rolloff', 'Chroma', 'ZCR', 'RMS', 'Label'])
 df.to_csv('music_database_1000.csv', index=False)
-print("✨ Complete! Push 'music_database_1000.csv' to GitHub now.")
+print("✨ Complete! Database is now mapped to Moods. You can retrain your model or push to GitHub.")
